@@ -1,0 +1,243 @@
+<html lang="en">
+<head>
+	<title>
+		Scheduler
+	</title>
+	<style>
+		.processTable {
+			width: 50%;
+		}
+		
+		table {
+			width: 100%;
+		}
+		
+		tr, td {
+			border: 1px solid black;
+			padding: 0;
+			margin: 0;
+			align-content: center;
+			align-items: center;
+			text-align: center;
+		}
+		
+		#calc {
+			display: none;
+		}
+		
+		#gantt {
+			height: 20px;
+			width: 100%;
+			border: solid 1px black;
+			background-color: lightgoldenrodyellow;
+		}
+		
+		#processes {
+			position: relative;
+			display: block;
+		}
+		
+		#timestamps {
+			position: relative;
+			display: block;
+			font-size: smaller;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="main">
+		<label for="arrivalTime">Arrival Time: </label><input type="number" id="arrivalTime">
+		<label for="burstTime">Burst Time: </label><input type="number" id="burstTime">
+		<button type="submit" id="submit" onclick="addProcess()">Add Process</button>
+	</div>
+	<br>
+	<div class="processTable">
+		<table>
+			<tr>
+				<td>pid</td>
+				<td>arrival</td>
+				<td>burst</td>
+				<td>completion time</td>
+				<td>turnaround time</td>
+				<td>waiting time</td>
+				<td>response time</td>
+			</tr>
+		</table>
+		<br>
+		<button type="submit" id="calc" onclick="calculate()">Create Gantt Table</button>
+		<br>
+		
+		<div id="gantt">
+			<div id="processes"></div>
+			<div id="timestamps"></div>
+		</div>
+		
+		<br><br>
+		<span>Average waiting time: </span><span id="averageWt"></span>
+		<br><br>
+		To calculate for a new input - refresh the page.
+	</div>
+</body>
+
+
+<script type="application/javascript">
+	// spaghetti code, sorry
+	let processes = []
+	
+	function addProcess() {
+		const arrivalInput = document.getElementById('arrivalTime')
+		const burstInput = document.getElementById('burstTime')
+		
+		processes.push({
+			pid: processes.length,
+			arrival: Number(arrivalInput.value),
+			burst: Number(burstInput.value)
+		})
+		
+		arrivalInput.value = '' // clear input
+		burstInput.value = ''
+		
+		appendNewProcessToTable()
+	}
+	
+	function appendNewProcessToTable() {
+		let currProc = processes.at(processes.length - 1)
+		
+		const table = document.querySelector('table')
+		
+		const tr = createAndAppendElement({ type: 'tr', parent: table, id: `p${ currProc.pid }` })
+		
+		createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.pid }` }) // append pid
+		createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.arrival }` }) // append arrival
+		createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.burst }` }) // append burst
+		
+		document.getElementById('calc').style.display = 'block' // once one proc was added, display the calculate button
+	}
+	
+	function sortByArrivalTime() {
+		// sort the processes by arrival time
+		processes.sort((a, b) => {
+			if (a.arrival < b.arrival) return -1
+			if (a.arrival > b.arrival) return 1
+			return 0
+		})
+	}
+	
+	function calculate() {
+		sortByArrivalTime()
+		
+		// TODO: clean up here
+		// first process in line
+		let p = processes[0]
+		p.completion = p.arrival + p.burst
+		p.turnaround = p.completion - p.arrival
+		p.response = p.waiting = p.turnaround - p.burst
+		p.startExec = 0 // consistency
+		
+		for (let i = 1; i < processes.length; i++) {
+			p = processes[i]
+			
+			const cpuLastReleased = processes[i - 1].completion; // last process completed and cpu released time
+			p.startExec = cpuLastReleased < p.arrival ? p.arrival : cpuLastReleased; // determine when started executing (cpu release / arrival time)
+			p.completion = p.startExec + p.burst
+			p.turnaround = p.completion - p.arrival
+			p.response = p.waiting = p.turnaround - p.burst
+		}
+		
+		appendData()
+		createAndAppendGantt()
+		calcAndDisplayAverageWT()
+	}
+	
+	function calcAndDisplayAverageWT() {
+		document.getElementById('averageWt').textContent = `${ processes.reduce((acc, p) => acc + p.waiting, 0) / processes.length }`
+	}
+	
+	function createAndAppendGantt() {
+		const procDiv = document.getElementById('processes')
+		const timestamps = document.getElementById('timestamps')
+		
+		processes.forEach(p => {
+			const px = 15; // multiply every pixel by 15
+			const start = p.startExec * px
+			const end = p.completion * px
+			
+			const width = `${ end - start }px`
+			
+			createAndAppendElement({
+				type: 'div',
+				parent: procDiv,
+				innerText: `P${ p.pid }`,
+				width,
+				bgcolor: 'lightgreen',
+				textAlign: 'center',
+				border: '1px solid black',
+				pos: 'absolute',
+				left: start
+			})
+			
+			createAndAppendElement({
+				type: 'div',
+				parent: timestamps,
+				innerText: `${ p.startExec }`,
+				left: start,
+				top: '20px',
+				pos: 'absolute'
+			})
+			
+			createAndAppendElement({
+				type: 'div',
+				parent: timestamps,
+				innerText: `${ p.completion }`,
+				left: end,
+				top: '20px',
+				pos: 'absolute'
+			})
+		})
+	}
+	
+	function appendData() {
+		processes.forEach(p => {
+			const parent = document.getElementById(`p${ p.pid }`)
+			createAndAppendElement({ type: 'td', parent, innerText: `${ p.completion }` })
+			createAndAppendElement({ type: 'td', parent, innerText: `${ p.turnaround }` })
+			createAndAppendElement({ type: 'td', parent, innerText: `${ p.waiting }` })
+			createAndAppendElement({ type: 'td', parent, innerText: `${ p.response }` })
+		})
+	}
+	
+	
+	// handles creating and appending elements
+	function createAndAppendElement({
+												  type,
+												  parent,
+												  innerText,
+												  id,
+												  bgcolor,
+												  textAlign,
+												  width,
+												  border,
+												  left,
+												  top,
+												  pos
+											  }) {
+		const el = document.createElement(type)
+		
+		if (id) el.id = id;
+		if (innerText) el.innerText = innerText
+		if (bgcolor) el.style.backgroundColor = bgcolor
+		if (textAlign) el.style.textAlign = textAlign
+		if (width) el.style.width = width
+		if (border) el.style.border = border
+		if (left) el.style.left = left
+		if (top) el.style.top = top
+		if (pos) el.style.position = pos
+		
+		parent.appendChild(el)
+		
+		return el // if we wanna pass this element again as a parent
+	}
+</script>
+</html>
