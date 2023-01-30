@@ -1,0 +1,38 @@
+.processTable {
+	width: 50%;
+}
+
+table {
+	width: 100%;
+}
+
+tr, td {
+	border: 1px solid black;
+	padding: 0;
+	margin: 0;
+	align-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+#calc {
+	display: none;
+}
+
+#gantt {
+	height: 20px;
+	width: 100%;
+	border: solid 1px black;
+	background-color: lightgoldenrodyellow;
+}
+
+#processes {
+	position: relative;
+	display: block;
+}
+
+#timestamps {
+	position: relative;
+	display: block;
+	font-size: smaller;
+}
