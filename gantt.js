@@ -1,7 +1,13 @@
 import { createAndAppendElement } from './appendHtml.js';
 import { calculateFCFS } from './fcfs.js';
+import { calculateSJF } from './sjf.js';
 
-export let processes = []
+let processes = []
+
+export function getProcessesList() {
+  return [...processes]
+}
+
 
 document.getElementById('submit').addEventListener('click', () => addProcess())
 document.getElementById('calc').addEventListener('click', () => calculate())
@@ -10,7 +16,8 @@ function calculate() {
   const schedulerType = document.getElementById('schedulers').value
 
   const schedulerAlgorithm = {
-    'fcfs': calculateFCFS
+    'fcfs': calculateFCFS,
+    'sjf': calculateSJF
   }
 
   schedulerAlgorithm[schedulerType]()
@@ -24,7 +31,10 @@ export function addProcess() {
   processes.push({
     pid: processes.length,
     arrival: Number(arrivalInput.value),
-    burst: Number(burstInput.value)
+    burst: Number(burstInput.value),
+    remainingBurst: Number(burstInput.value),
+    startInterval: [],
+    endInterval: []
   })
 
   arrivalInput.value = '' // clear input
