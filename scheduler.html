@@ -11,8 +11,9 @@
 
 <body>
 	<div class="main">
-		<label for="arrivalTime">Arrival Time: </label><input type="number" id="arrivalTime">
-		<label for="burstTime">Burst Time: </label><input type="number" id="burstTime">
+		<label for="arrivalTime">Arrival Time: </label><input type="number" id="arrivalTime"><br>
+		<label for="burstTime">Burst Time: </label><input type="number" id="burstTime"><br>
+		<label for="priority">Priority: </label><input type="number" id="priority"><br>
 		<button type="submit" id="submit">Add Process</button>
 	</div>
 	<br>
@@ -20,6 +21,7 @@
 		<table>
 			<tr>
 				<td>pid</td>
+				<td>priority</td>
 				<td>arrival</td>
 				<td>burst</td>
 				<td>completion time</td>
@@ -33,6 +35,7 @@
 		<select name="schedulers" id="schedulers">
 			<option value="fcfs">First Come First Serve</option>
 			<option value="sjf">Shortest Job First (preemptive)</option>
+			<option value="priority">Priority (preemptive)</option>
 		</select>
 		
 		<br><br>

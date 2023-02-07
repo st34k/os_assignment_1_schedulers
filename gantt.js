@@ -1,6 +1,7 @@
 import { createAndAppendElement } from './appendHtml.js';
 import { calculateFCFS } from './fcfs.js';
 import { calculateSJF } from './sjf.js';
+import { calculatePriority } from './priority.js';
 
 let processes = []
 
@@ -17,7 +18,8 @@ function calculate() {
 
   const schedulerAlgorithm = {
     'fcfs': calculateFCFS,
-    'sjf': calculateSJF
+    'sjf': calculateSJF,
+    'priority': calculatePriority
   }
 
   schedulerAlgorithm[schedulerType]()
@@ -25,20 +27,27 @@ function calculate() {
 
 
 export function addProcess() {
+  // TODO: don't allow negative values
+  // TODO 2: Don't allow same priority if user enters it
+  // TODO 3: export html handling
+  // TODO 4: radio buttons
   const arrivalInput = document.getElementById('arrivalTime')
   const burstInput = document.getElementById('burstTime')
+  const priorityInput = document.getElementById('priority')
 
   processes.push({
     pid: processes.length,
     arrival: Number(arrivalInput.value),
     burst: Number(burstInput.value),
     remainingBurst: Number(burstInput.value),
+    priority: Number(priorityInput.value) || 0,
     startInterval: [],
     endInterval: []
   })
 
   arrivalInput.value = '' // clear input
   burstInput.value = ''
+  priorityInput.value = ''
 
   appendNewProcessToTable()
 }
@@ -51,6 +60,7 @@ function appendNewProcessToTable() {
   const tr = createAndAppendElement({ type: 'tr', parent: table, id: `p${ currProc.pid }` })
 
   createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.pid }` }) // append pid
+  createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.priority }` }) // append priority
   createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.arrival }` }) // append arrival
   createAndAppendElement({ type: 'td', parent: tr, innerText: `${ currProc.burst }` }) // append burst
 

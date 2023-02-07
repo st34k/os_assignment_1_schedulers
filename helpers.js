@@ -21,10 +21,32 @@ export function sortByArrivalAndBurst(queue) {
   })
 }
 
+export function sortByArrivalAndPriority(queue) {
+  queue.sort((a, b) => {
+    if (a.arrival < b.arrival) return -1
+    if (a.arrival > b.arrival) return 1
+
+    if (a.arrival === b.arrival) {
+      if (a.priority < b.priority) return -1
+      if (a.priority > b.priority) return 1
+    }
+    return 0
+  })
+}
+
 export function sortByRemainingBurst(queue) {
   queue.sort((a, b) => {
     if (a.remainingBurst < b.remainingBurst) return -1
     if (a.remainingBurst > b.remainingBurst) return 1
+
+    return 0
+  })
+}
+
+export function sortByPriority(queue) {
+  queue.sort((a, b) => {
+    if (a.priority < b.priority) return -1
+    if (a.priority > b.priority) return 1
 
     return 0
   })
