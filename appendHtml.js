@@ -1,5 +1,5 @@
 // handles creating and appending elements
-export function createAndAppendElement({
+export default function createAndAppendElement({
                                   type,
                                   parent,
                                   innerText,
