@@ -5,16 +5,55 @@
 	</title>
 	
 	<script type="module" src="gantt.js"></script>
-	
+	<script type="module" src="src/htmlEvents.js"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 	<div class="main">
-		<label for="arrivalTime">Arrival Time: </label><input type="number" min="0" id="arrivalTime"><br>
-		<label for="burstTime">Burst Time: </label><input type="number" min="0" id="burstTime"><br>
-		<label for="priority">Priority: </label><input type="number" min="0" id="priority"><br>
-		<button type="submit" id="submit">Add Process</button>
+		<div id="selectAlgoDiv">
+			<label for="schedulers">Select scheduling algorithm: </label>
+			<select name="schedulers" id="schedulers">
+			<option value="fcfs">First Come First Serve</option>
+			<option value="sjf">Shortest Job First (preemptive)</option>
+			<option value="priority">Priority (preemptive)</option>
+			<option value="rr">Round Robin (preemptive)</option>
+		</select>
+		
+		</div>
+		
+		<div>
+			<label for="arrivalTime">Arrival Time: </label><input type="number" min="0" id="arrivalTime"><br>
+		</div>
+		
+		<div>
+			<label for="burstTime">Burst Time: </label><input type="number" min="0" id="burstTime"><br>
+		</div>
+		
+		<div id="priority_div">
+			<label for="priority">Priority: </label><input type="number" min="0" id="priority">
+		</div>
+		
+<!--		TODO: make this an input-->
+		<div id="quantum_div">
+			<label for="tq">Select time quantum: </label>
+			<select name="timeQ" id="tq">
+			<option value="2">2ms</option>
+			<option value="3">3ms</option>
+			<option value="4">4ms</option>
+			<option value="5">5ms</option>
+			<option value="6">6ms</option>
+			<option value="7">7ms</option>
+			<option value="8">8ms</option>
+			<option value="9">9ms</option>
+			<option value="10">10ms</option>
+			</select>
+			<sub>Default: 2ms</sub>
+			
+		</div>
+		
+		<br>
+		<button type="submit" id="submit">Add PCB</button>
 	</div>
 	<br>
 	<div class="processTable">
@@ -31,12 +70,7 @@
 			</tr>
 		</table>
 		<br>
-		<label for="schedulers">Select scheduling algorithm: </label>
-		<select name="schedulers" id="schedulers">
-			<option value="fcfs">First Come First Serve</option>
-			<option value="sjf">Shortest Job First (preemptive)</option>
-			<option value="priority">Priority (preemptive)</option>
-		</select>
+		
 		
 		<br><br>
 		<button type="submit" id="calc">Create Gantt Table</button>

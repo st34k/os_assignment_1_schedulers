@@ -1,32 +1,32 @@
+// TODO - remove the priority column where unnecessary
+// TODO - reset all calculations after displaying gantt
+// TODO reset table when pressing "calculate", add reset button
+// TODO: radio buttons?
+// TODO: give every process its own color in gantt (instead of randoms)
+// TODO: create a step-through functionality, show queues, etc
 import createAndAppendElement from './appendHtml.js';
 import FCFS from './src/schedulers/FCFS.js'
-import Process from './src/schedulers/Process.js'
-import { Priority, SJF } from './src/schedulers/Priority_schedulers.js';
+import PCB from './src/schedulers/PCB.js'
+import RoundRobin from './src/schedulers/RoundRobin.js';
+import { Priority, SJF } from './src/schedulers/prioritySchedulers.js';
 import { calcAndDisplayAverageWT, correctIntervalTimers } from './helpers.js';
-import { getProcessDivDef, getTimestampDivDef } from './common.js';
+import { generateRandomColor, getProcessDivDef, getTimestampDivDef } from './common.js';
+import { arrivalInput, burstInput, priorityInput, getQuantum, getSchedulerType } from './src/htmlEvents.js'
 
 let processes = []
 
-document.getElementById('submit').addEventListener('click', () => addProcess())
-document.getElementById('calc').addEventListener('click', () => calculate())
-const arrivalInput = document.getElementById('arrivalTime')
-const burstInput = document.getElementById('burstTime')
-const priorityInput = document.getElementById('priority')
-
-function getSchedulerType() {
-  return document.getElementById('schedulers').value
-}
-
-function calculate() {
+export function calculate() {
   const type = getSchedulerType()
+  const quantum = Number(getQuantum())
 
   const schedulerAlgorithm = {
     fcfs: FCFS,
     sjf: SJF,
-    priority: Priority
+    priority: Priority,
+    rr: RoundRobin
   }
 
-  const scheduler = new schedulerAlgorithm[type](processes)
+  const scheduler = new schedulerAlgorithm[type](processes, quantum)
 
   scheduler.start()
   scheduler.calculateTimes()
@@ -38,16 +38,11 @@ function calculate() {
 
 
 export function addProcess() {
-  // TODO - reset all calculations after displaying gantt
-  // reset table when pressing "calculate"
-  // TODO 3: export html handling
-  // TODO 4: radio buttons?
-
   const arrival = Number(arrivalInput.value)
   const burst = Number(burstInput.value)
   const priority = Number(priorityInput.value) || 0
 
-  processes.push(new Process(processes.length, arrival, burst, priority))
+  processes.push(new PCB(processes.length, arrival, burst, priority))
 
   appendNewProcessToTable()
   clearInputs()
@@ -79,11 +74,12 @@ function createGantt({ terminated }) {
     correctIntervalTimers(p)
 
     const { pid, startInterval, endInterval } = p
+    const processColor = generateRandomColor();
 
     for (let i = 0; i < startInterval.length; i++) {
       let [start, end] = [startInterval[i], endInterval[i]]
 
-      createAndAppendElement(getProcessDivDef({ pid, start, end }))
+      createAndAppendElement(getProcessDivDef({ pid, start, end, bgcolor: processColor }))
       createAndAppendElement(getTimestampDivDef({ start }))
       createAndAppendElement(getTimestampDivDef({ end }))
     }

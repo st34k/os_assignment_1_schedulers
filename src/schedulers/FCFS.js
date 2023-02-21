@@ -5,7 +5,7 @@ export default class FCFS extends ProcessScheduler {
   constructor(processes) {
     sortByArrivalTime(processes)
 
-    super(processes, 'fcfs')
+    super(processes)
   }
 
   checkReadyQueue() {
@@ -13,8 +13,7 @@ export default class FCFS extends ProcessScheduler {
       this.dispatch()
     }
   }
-
-  // TODO: check if all schedulers can be handled by same math
+  
   calculateTimes() {
     this.terminated.forEach(p => {
       p.turnaround = p.completion - p.arrival

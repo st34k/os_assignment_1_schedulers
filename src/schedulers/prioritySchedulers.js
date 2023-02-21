@@ -23,8 +23,6 @@ export class PriorityScheduler extends ProcessScheduler {
 
   calculateTimes() {
     this.terminated.forEach(p => {
-      // correctIntervalTimers(p)
-      // TODO: check if still need correction
       const { arrival, burst, startInterval, completion } = p
 
       p.turnaround = completion - arrival

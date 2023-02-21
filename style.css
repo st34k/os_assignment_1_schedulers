@@ -36,3 +36,11 @@ tr, td {
 	display: block;
 	font-size: smaller;
 }
+
+#selectAlgoDiv {
+	margin: 10px 0 10px 0;
+}
+
+#priority_div, #quantum_div {
+	display: none;
+}

@@ -1,4 +1,4 @@
-export default class Process {
+export default class PCB {
   startInterval = []
   endInterval = []
   response

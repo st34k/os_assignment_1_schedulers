@@ -1,10 +1,10 @@
 const PX_MULTIPLIER = 15; // multiply every pixel by 15
 
-function generateRandomColor() {
+export function generateRandomColor() {
   return '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6)
 }
 
-export function getProcessDivDef({ pid, start, end }) {
+export function getProcessDivDef({ pid, start, end, bgcolor }) {
   const processDisplayBar = document.getElementById('processes')
 
   return {
@@ -12,7 +12,7 @@ export function getProcessDivDef({ pid, start, end }) {
     parent: processDisplayBar,
     innerText: `P${ pid }`,
     width: `${ (end - start) * PX_MULTIPLIER }px`,
-    bgcolor: generateRandomColor(),
+    bgcolor,
     textAlign: 'center',
     border: '1px solid black',
     pos: 'absolute',

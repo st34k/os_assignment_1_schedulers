@@ -1,5 +1,5 @@
 export class ProcessScheduler {
-  constructor(processes) { // default scheduler is fcfs
+  constructor(processes) {
     this.processes = processes
     this.processesAmount = processes.length
   }
