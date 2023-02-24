@@ -40,17 +40,3 @@ export function sortPrioritySchedulerQueue(queue, priorityType) {
     return 0
   })
 }
-
-export function correctIntervalTimers({ startInterval, endInterval }) {
-  // minor bug with implementation, easier to handle it by cleaning up the timers at this point
-  for (let i = 0; i < startInterval.length; i++) {
-    if (startInterval[i] === endInterval[i]) {
-      startInterval.splice(i, 1)
-      endInterval.splice(i, 1)
-    }
-  }
-}
-
-export function calcAndDisplayAverageWT({ terminated }) {
-  document.getElementById('averageWt').textContent = `${ terminated.reduce((acc, p) => acc + p.waiting, 0) / terminated.length }ms`
-}

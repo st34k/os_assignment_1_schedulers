@@ -1,4 +1,6 @@
-export class ProcessScheduler {
+import CPU from '../components/cpu.js'
+
+export default class ProcessScheduler {
   constructor(processes) {
     this.processes = processes
     this.processesAmount = processes.length
@@ -18,7 +20,6 @@ export class ProcessScheduler {
         while (next && next.arrival === this.cpu.time) {
           this.introduce()
 
-          this.checkReadyQueue()
           next = this.processes[0]
         }
       }
@@ -28,7 +29,10 @@ export class ProcessScheduler {
   }
 
   checkReadyQueue() {
-  } // empty declaration - will be overridden in child classes
+    if (!this.running && this.ready.length) {
+      this.dispatch()
+    }
+  }
 
   introduce() {
     this.ready.push(this.processes.shift())
@@ -56,24 +60,16 @@ export class ProcessScheduler {
   }
 
   execute() {
-    this.cpu.tick()
+    this.cpu.clockTick()
 
     if (this.running) {
-      this.running.tickBurst()
+      this.running.burstTick()
 
       if (!this.running.remainingBurst) {
         this.terminate()
-        this.checkReadyQueue()
       }
     }
   }
 }
 
-class CPU {
-  time = 0
-
-  tick() {
-    this.time++
-  }
-}
 

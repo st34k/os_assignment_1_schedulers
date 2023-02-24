@@ -32,3 +32,7 @@ export function getTimestampDivDef({ start = 0, end = 0 }) {
     pos: 'absolute'
   }
 }
+
+export function calcAndDisplayAverageWT({ terminated }) {
+  document.getElementById('averageWt').textContent = `${ terminated.reduce((acc, p) => acc + p.waiting, 0) / terminated.length }ms`
+}

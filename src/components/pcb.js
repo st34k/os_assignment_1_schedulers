@@ -13,7 +13,7 @@ export default class PCB {
     this.priority = priority || 0
   }
 
-  tickBurst() {
+  burstTick() {
     this.remainingBurst--
   }
 

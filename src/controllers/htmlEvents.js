@@ -1,9 +1,13 @@
-import { addProcess, calculate } from '../gantt.js';
+import { addProcess, calculate } from '../../main.js';
 
 const schedulerSelection = document.getElementById('schedulers')
+const arrivalInput = document.getElementById('arrivalTime')
+const burstInput = document.getElementById('burstTime')
+const priorityInput = document.getElementById('priority')
 
 document.getElementById('submit').addEventListener('click', () => addProcess())
 document.getElementById('calc').addEventListener('click', () => calculate())
+
 
 schedulerSelection.addEventListener('change', (e) => {
   if (schedulerSelection.selectedIndex === 2) {
@@ -23,11 +27,17 @@ export function getSchedulerType() {
 }
 
 export function getQuantum() {
-  return document.getElementById('tq').value || 2
+  return Number(document.getElementById('tq').value || 2)
 }
 
-const arrivalInput = document.getElementById('arrivalTime')
-const burstInput = document.getElementById('burstTime')
-const priorityInput = document.getElementById('priority')
+export function displayCalculateBtn() {
+  document.getElementById('calc').style.display = 'block' // once one proc was added, display the calculate button
+}
+
+export function clearInputs() {
+  arrivalInput.value = ''
+  burstInput.value = ''
+  priorityInput.value = ''
+}
 
 export { arrivalInput, burstInput, priorityInput }
