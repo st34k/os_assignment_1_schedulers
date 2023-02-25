@@ -1,3 +1,20 @@
 {
-  "type": "commonjs"
+  "type": "commonjs",
+  "name": "scheduler_algorithms",
+  "version": "1.0.0",
+  "description": "assignment 1 - operating systems: basic scheduling algorithms",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/st34k/os_assignment_1_schedulers.git"
+  },
+  "author": "alex kofman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/st34k/os_assignment_1_schedulers/issues"
+  },
+  "homepage": "https://github.com/st34k/os_assignment_1_schedulers#readme"
 }
